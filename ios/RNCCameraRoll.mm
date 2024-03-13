@@ -59,8 +59,11 @@ RCT_ENUM_CONVERTER(PHAssetCollectionSubtype, (@{
     [format addObject:@"mediaType = %d"];
     [arguments addObject:@(PHAssetMediaTypeImage)];
   } else if ([lowercase isEqualToString:@"videos"]) {
-    [format addObject:@"mediaType = %d"];
-    [arguments addObject:@(PHAssetMediaTypeVideo)];
+    //     [format addObject:@"mediaType = %d"];
+    //     [arguments addObject:@(PHAssetMediaTypeVideo)];
+    // remove slow motion, and time-laps videso 
+    [arguments addObject:[NSPredicate predicateWithFormat:@"(mediaType == %d) && !((mediaSubtype & %d) == %d) && !((mediaSubtype & %d) == %d)", PHAssetMediaTypeVideo, PHAssetMediaSubtypeVideoHighFrameRate, PHAssetMediaSubtypeVideoHighFrameRate,PHAssetMediaSubtypeVideoTimelapse,PHAssetMediaSubtypeVideoTimelapse]];
+
   } else {
     if (![lowercase isEqualToString:@"all"]) {
       RCTLogError(@"Invalid filter option: '%@'. Expected one of 'photos',"
